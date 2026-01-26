@@ -2,7 +2,7 @@
 
 # MCP Setup Script for Modular MCP
 # Usage: curl -sSL https://raw.githubusercontent.com/IgorKrupenja/modular-mcp/main/scripts/setup.sh | bash -s -- [editor]
-# Editors: cursor, vscode, jetbrains, claude, all (default: all)
+# Editors: cursor, vscode, jetbrains, claude
 
 EDITOR=${1:-all}
 BASE_URL="http://localhost:3627/mcp"
