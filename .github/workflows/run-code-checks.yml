@@ -1,0 +1,48 @@
+name: Run code checks
+on:
+  push:
+    branches: [main, dev]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'eslint.config.mjs'
+      - 'tsconfig.json'
+      - 'vitest.config.ts'
+  pull_request:
+    types: [opened, ready_for_review, reopened, synchronize]
+    paths:
+      - 'src/**'
+      - 'scripts/**'
+      - '.github/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'eslint.config.mjs'
+      - 'tsconfig.json'
+      - 'vitest.config.ts'
+concurrency:
+  group: ${{ github.ref }}-code-checks
+  cancel-in-progress: true
+
+jobs:
+  format:
+    uses: ./.github/workflows/run-check.yml
+    with:
+      command: pnpm run format:check
+
+  lint:
+    uses: ./.github/workflows/run-check.yml
+    with:
+      command: pnpm run lint:check
+
+  typecheck:
+    uses: ./.github/workflows/run-check.yml
+    with:
+      command: pnpm run typecheck
+
+  test:
+    uses: ./.github/workflows/run-check.yml
+    with:
+      command: pnpm run test

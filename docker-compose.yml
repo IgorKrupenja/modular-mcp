@@ -1,0 +1,12 @@
+services:
+  mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: modular-mcp
+    volumes:
+      # Volume mount rules directory for immediate changes after git pull or edit
+      - ./rules:/app/rules:ro
+    ports:
+      - '3627:3627'
+    restart: unless-stopped

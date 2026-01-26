@@ -1,0 +1,66 @@
+version: 1
+
+languages:
+  typescript:
+    description: TypeScript base rules
+  java:
+    description: Java base rules
+  css:
+    description: CSS base rules
+
+techs:
+  react:
+    description: React framework rules
+    dependsOn:
+      - typescript
+  tailwind:
+    description: Tailwind CSS rules
+    dependsOn:
+      - css
+  nestjs:
+    description: NestJS framework rules
+    dependsOn:
+      - typescript
+  spring:
+    description: Spring framework rules
+    dependsOn:
+      - java
+
+groups:
+  global:
+    description: Rules always included for any request
+  buerokratt:
+    description: Rules shared across all Bürokratt projects
+
+defaults:
+  globalGroup: global
+
+projects:
+  buerokratt/Service-Module:
+    description: Bürokratt Service Module
+    groups:
+      - buerokratt
+    techs:
+      - react
+    languages:
+      - typescript
+  buerokratt/Buerokratt-Chatbot:
+    description: Bürokratt Chatbot
+    groups:
+      - buerokratt
+    techs:
+      - react
+    languages:
+      - typescript
+  buerokratt/Training-Module:
+    description: Bürokratt Training Module
+    groups:
+      - buerokratt
+    languages:
+      - typescript
+  buerokratt/Analytics-Module:
+    description: Bürokratt Analytics Module
+    groups:
+      - buerokratt
+    languages:
+      - typescript

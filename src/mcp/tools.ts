@@ -1,0 +1,99 @@
+/**
+ * MCP Tool Handlers
+ *
+ * Handles tool-related requests (querying and searching rules)
+ */
+
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { z } from 'zod';
+
+import { getAvailableScopeIds } from '@/utils/manifest.ts';
+import { searchRulesByKeyword } from '@/utils/rules.ts';
+import type { RuleScope } from '@/utils/types.ts';
+
+/**
+ * Set up tool handlers for the MCP server
+ */
+export function setupTools(server: McpServer): void {
+  // Tool: Get MCP server usage instructions
+  server.registerTool(
+    'get_mcp_instructions',
+    {
+      description: 'Get detailed instructions on how to use this MCP server effectively',
+      inputSchema: z.object({}),
+    },
+    async () => {
+      const instructionsPath = join(process.cwd(), 'rules', 'mcp-instructions.md');
+      const instructions = await readFile(instructionsPath, 'utf-8');
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: instructions,
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: List available ids for a scope
+  server.registerTool(
+    'list_scope_ids',
+    {
+      description: 'List all available identifiers for a scope',
+      inputSchema: z.object({
+        scope: z.enum(['project', 'group', 'tech', 'language']).describe('Scope type'),
+      }),
+    },
+    async (args) => {
+      const ids = await getAvailableScopeIds(args.scope as RuleScope);
+
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: `Available ${args.scope} ids:\n\n${ids.map((id) => `- ${id}`).join('\n')}`,
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: Search rules by keyword
+  server.registerTool(
+    'search_rules',
+    {
+      description: 'Search for rules containing a specific keyword across all scopes',
+      inputSchema: z.object({
+        keyword: z.string().describe('Keyword to search for'),
+        scope: z
+          .enum(['project', 'group', 'tech', 'language'])
+          .optional()
+          .describe('Optional: limit search to a scope'),
+        id: z.string().optional().describe('Optional: scope identifier'),
+      }),
+    },
+    async (args) => {
+      if ((args.scope && !args.id) || (!args.scope && args.id)) {
+        throw new Error('Both scope and id must be provided together.');
+      }
+
+      const text = await searchRulesByKeyword({
+        keyword: args.keyword,
+        scope: args.scope,
+        id: args.id,
+      });
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text,
+          },
+        ],
+      };
+    },
+  );
+}
