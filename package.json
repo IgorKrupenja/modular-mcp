@@ -1,7 +1,7 @@
 {
-  "name": "modular-mcp",
+  "name": "codex-mcp",
   "version": "0.1.0",
-  "description": "MCP server for modular AI coding assistant rules",
+  "description": "Codex: MCP server for AI coding assistant rules across projects, tech stacks, and languages",
   "type": "module",
   "private": true,
   "packageManager": "pnpm@10.28.1",

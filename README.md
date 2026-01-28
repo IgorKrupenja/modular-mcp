@@ -1,10 +1,14 @@
-# MCP Rules Server
+# Codex MCP
 
-MCP (Model Context Protocol) server with modular architecture for sharing AI coding assistant rules across projects, tech stacks, and languages.
+**Codex** [/ˈkoʊdɛks/] — from Latin _cōdex_, meaning "book" or "block of wood used for writing"
+
+A modular MCP (Model Context Protocol) server for sharing AI coding assistant rules for different projects and tech stacks.
 
 ## Setup
 
 ### In this repo folder
+
+a
 
 ```bash
 docker compose up -d
