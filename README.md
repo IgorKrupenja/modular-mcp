@@ -50,10 +50,11 @@ If you followed the setup instructions above, your AI assistant will automatical
 
 - "Get NestJS rules from MCP"
 - "Load React rules"
-- "What projects are available?"
+- "What projects are available in MCP?"
 - "Show available tech stacks"
-- "Find rules about testing"
+- "Find rules about testing in MCP?"
 - "Load Service-Module rules"
+- "Get rules for this project in MCP" (provided you have selected a file belonging to the project)
 
 <!-- todo all below needs review -->
 

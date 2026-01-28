@@ -44,16 +44,21 @@ Use the `list_scope_ids` tool to discover what's available for that scope before
 
 ## Available MCP Tools
 
-1. **list_scope_ids** - List available IDs for a scope
+1. **get_rules** - Get rules for a specific scope and id
+   - Parameters: `scope` (project/group/tech/language), `id` (string)
+   - Use when: You need to fetch rules via tool interface instead of resources
+   - Note: Prefer using MCP resources (`rules://...`) over this tool when possible - resources are more efficient
+
+2. **list_scope_ids** - List available IDs for a scope
    - Parameters: `scope` (project/group/tech/language)
    - Use when: User asks "What projects are available?" or "Show available technologies"
 
-2. **search_rules** - Search rules by keyword
+3. **search_rules** - Search rules by keyword
    - Parameters: `keyword` (required), `scope` (optional), `id` (optional)
    - Use when: User asks "Find rules about testing" or "Search for database rules"
-   - **VERY important:** This tool is only for searching rules, not for loading them. Use MCP resources to load complete rules.
+   - **VERY Important:** Use this tools for SEARCHING only. If the user requests to "load/get/etc. rules", use the `get_rules` tool instead.
 
-3. **get_mcp_instructions** - Get detailed instructions on how to use this MCP server
+4. **get_mcp_instructions** - Get detailed instructions on how to use this MCP server
    - No parameters required
    - Use when: You need guidance on how to use this MCP server effectively
 
