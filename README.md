@@ -1,6 +1,6 @@
 # Codex MCP
 
-**Codex** [/ˈkoʊdɛks/] — from Latin _cōdex_, meaning "book" or "block of wood used for writing"
+> **Codex** [/ˈkoʊdɛks/] — from Latin _cōdex_, meaning "book" or, specifically, **"book of rules/guidelines"**
 
 A modular MCP (Model Context Protocol) server for sharing AI coding assistant rules for different projects and tech stacks.
 
