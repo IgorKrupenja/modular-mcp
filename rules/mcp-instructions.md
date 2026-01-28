@@ -42,6 +42,7 @@ Use the `list_scope_ids` tool to discover what's available for that scope before
 2. **search_rules** - Search rules by keyword
    - Parameters: `keyword` (required), `scope` (optional), `id` (optional)
    - Use when: User asks "Find rules about testing" or "Search for database rules"
+   - **VERY important:** This tool is only for searching rules, not for loading them. Use `FetchMcpResource` instead, e.g. when user asks to just load rules.
 
 3. **get_mcp_instructions** - Get detailed instructions on how to use this MCP server
    - No parameters required
