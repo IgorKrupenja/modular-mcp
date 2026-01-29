@@ -2,12 +2,12 @@
 appliesTo:
   groups:
     - global
-description: Instructions for AI assistants on how to use the codex-mcp server
+description: Instructions for AI assistants on how to use the rulekit-mcp server
 ---
 
 # MCP Rules Server Integration
 
-`codex-mcp` server is available to provide AI coding assistant rules for different tech stacks, projects, and languages.
+`rulekit-mcp` server is available to provide AI coding assistant rules for different tech stacks, projects, and languages.
 
 ## When to Load Rules
 

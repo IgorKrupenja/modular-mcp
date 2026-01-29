@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # MCP Setup Script for the MCP
-# Usage: curl -sSL https://raw.githubusercontent.com/IgorKrupenja/codex-mcp/main/scripts/setup.sh | bash -s -- [editor]
+# Usage: curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- [editor]
 # Editors: cursor, vscode, jetbrains, claude
 
 EDITOR=${1:-all}
 BASE_URL="http://localhost:3627/mcp"
-INSTRUCTION_CONTENT="When working with the \`codex-mcp\` MCP server, use the \`get_mcp_instructions\` tool to get detailed instructions on how to use this server effectively."
+INSTRUCTION_CONTENT="When working with the \`rulekit-mcp\` MCP server, use the \`get_mcp_instructions\` tool to get detailed instructions on how to use this server effectively."
 
-echo "🚀 Setting up Codex MCP (Editor: $EDITOR)..."
+echo "🚀 Setting up Rulekit MCP (Editor: $EDITOR)..."
 
 # Helper to merge JSON using jq if available
 update_json_file() {
@@ -47,7 +47,7 @@ if [[ "$EDITOR" == "cursor" || "$EDITOR" == "all" ]]; then
 
   CURSOR_CONFIG='{
   "mcpServers": {
-    "codex-mcp": {
+    "rulekit-mcp": {
       "url": "'$BASE_URL'",
       "transport": {
         "type": "sse"
@@ -56,10 +56,10 @@ if [[ "$EDITOR" == "cursor" || "$EDITOR" == "all" ]]; then
   }
 }'
 
-  update_json_file ".cursor/mcp.json" ".mcpServers[\"codex-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$CURSOR_CONFIG"
+  update_json_file ".cursor/mcp.json" ".mcpServers[\"rulekit-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$CURSOR_CONFIG"
 
   mkdir -p .cursor/rules
-  cat >.cursor/rules/codex-mcp.mdc <<EOF
+  cat >.cursor/rules/rulekit-mcp.mdc <<EOF
 ---
 alwaysApply: true
 ---
@@ -76,7 +76,7 @@ if [[ "$EDITOR" == "vscode" || "$EDITOR" == "all" ]]; then
 
   VSCODE_CONFIG='{
   "mcp.servers": {
-    "codex-mcp": {
+    "rulekit-mcp": {
       "url": "'$BASE_URL'",
       "transport": {
         "type": "sse"
@@ -85,7 +85,7 @@ if [[ "$EDITOR" == "vscode" || "$EDITOR" == "all" ]]; then
   }
 }'
 
-  update_json_file ".vscode/settings.json" ".\"mcp.servers\"[\"codex-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$VSCODE_CONFIG"
+  update_json_file ".vscode/settings.json" ".\"mcp.servers\"[\"rulekit-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$VSCODE_CONFIG"
 
   mkdir -p .github
   cat >.github/copilot-instructions.md <<EOF
@@ -104,7 +104,7 @@ if [[ "$EDITOR" == "jetbrains" || "$EDITOR" == "all" ]]; then
 
   JETBRAINS_CONFIG='{
   "mcpServers": {
-    "codex-mcp": {
+    "rulekit-mcp": {
       "url": "'$BASE_URL'",
       "transport": {
         "type": "sse"
@@ -113,27 +113,27 @@ if [[ "$EDITOR" == "jetbrains" || "$EDITOR" == "all" ]]; then
   }
 }'
 
-  update_json_file ".idea/mcp.json" ".mcpServers[\"codex-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$JETBRAINS_CONFIG"
+  update_json_file ".idea/mcp.json" ".mcpServers[\"rulekit-mcp\"] = {url: \"$BASE_URL\", transport: {type: \"sse\"}}" "$JETBRAINS_CONFIG"
 
   mkdir -p .aiassistant/rules
-  cat >.aiassistant/rules/codex-mcp.md <<EOF
+  cat >.aiassistant/rules/rulekit-mcp.md <<EOF
 # MCP Rules Server Integration
 
 $INSTRUCTION_CONTENT
 EOF
-  echo "  ⚠️  Note: In JetBrains Settings | Tools | AI Assistant | Project Rules, set 'codex-mcp' to 'Always' mode."
+  echo "  ⚠️  Note: In JetBrains Settings | Tools | AI Assistant | Project Rules, set 'rulekit-mcp' to 'Always' mode."
 fi
 
 # 4. Claude Code Setup
 if [[ "$EDITOR" == "claude" || "$EDITOR" == "all" ]]; then
   echo "  Configuring Claude Code..."
   if command -v claude &>/dev/null; then
-    claude mcp add --transport http codex-mcp "$BASE_URL"
+    claude mcp add --transport http rulekit-mcp "$BASE_URL"
     echo "  ✅ Added MCP to Claude Code."
     echo "  Run this to append system prompt: claude --append-system-prompt \"$INSTRUCTION_CONTENT\""
   else
     echo "  ⚠️  'claude' CLI not found. Skipping auto-config, but you can run:"
-    echo "  claude mcp add --transport http codex-mcp $BASE_URL"
+    echo "  claude mcp add --transport http rulekit-mcp $BASE_URL"
   fi
 fi
 

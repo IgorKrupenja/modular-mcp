@@ -1,9 +1,9 @@
 services:
-  mcp-server:
+  rulekit-mcp:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: codex-mcp
+    container_name: mcp-server
     volumes:
       # Volume mount rules directory for immediate changes after git pull or edit
       - ./rules:/app/rules:ro

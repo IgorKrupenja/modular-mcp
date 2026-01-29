@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "codex-mcp": {
+    "rulekit-mcp": {
       "type": "streamable-http",
       "url": "http://localhost:3627/mcp"
     }

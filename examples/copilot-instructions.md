@@ -19,4 +19,4 @@ applyTo: '**'
 
 ## MCP Rules Server Integration
 
-When working with the `codex-mcp` MCP server, use the `get_mcp_instructions` tool to get detailed usage instructions.
+When working with the `rulekit-mcp` MCP server, use the `get_mcp_instructions` tool to get detailed usage instructions.
