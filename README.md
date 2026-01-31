@@ -4,43 +4,45 @@ A modular MCP (Model Context Protocol) server for sharing AI coding assistant ru
 
 ## Setup
 
-### In this repo folder
+### 1. Start the server
 
 ```bash
 docker compose up -d
 ```
 
-### In your project(s) folder
+### 2. Configure your editor
 
-Note that this can be a folder with multiple projects/repositories.
+In your project(s) folder, run the command for your editor. **Pro tip:** this can be a folder with multiple projects/repositories.
 
-#### Cursor
+The script adds MCP server config and a small instruction bootstrap file. It checks for existing configuration and only appends if needed.
+
+**Cursor:**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- cursor
 ```
 
-#### VS Code
+**VS Code:**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- vscode
 ```
 
-#### JetBrains
+**JetBrains:**
 
-1. Run:
+```bash
+curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- jetbrains
+```
 
-   ```bash
-   curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- jetbrains
-   ```
-
-2. In **Settings | Tools | AI Assistant | Project Rules**, set `rulekit-mcp` to **Always** mode.
-
-#### Claude Code
+**Claude Code:**
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- claude
 ```
+
+**Manual install:**
+
+If you do not want to use the script, **you can also set up manually**. See [docs/setup.md](docs/setup.md).
 
 ## Prompting
 
