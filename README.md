@@ -14,6 +14,8 @@ docker compose up -d
 
 In your project(s) folder, run the command for your editor. **Pro tip:** this can be a folder with multiple projects/repositories.
 
+The script adds MCP server config and a small instruction bootstrap file. It checks for existing configuration and only appends if needed.
+
 **Cursor:**
 
 ```bash
@@ -38,9 +40,9 @@ curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/script
 curl -sSL https://raw.githubusercontent.com/IgorKrupenja/rulekit-mcp/main/scripts/setup.sh | bash -s -- claude
 ```
 
-The script adds MCP server config and a small instruction bootstrap file. It checks for existing configuration and only appends if needed.
+**Manual install:**
 
-If you do not want to use the script, you can also set up manually. See [docs/setup.md](docs/setup.md).
+If you do not want to use the script, **you can also set up manually**. See [docs/setup.md](docs/setup.md).
 
 ## Prompting
 
