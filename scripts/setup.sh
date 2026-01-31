@@ -13,7 +13,7 @@ echo "🚀 Setting up Rulekit MCP (Editor: $EDITOR)..."
 # Helper to add MCP server to JSON config if not already present
 update_json_file() {
   local file=$1
-  local server_key=$2  # e.g., "mcpServers" or "mcp.servers"
+  local server_key=$2 # e.g., "mcpServers" or "mcp.servers"
   local jq_filter=$3
   local fallback_content=$4
 
@@ -130,7 +130,7 @@ if [[ "$EDITOR" == "vscode" || "$EDITOR" == "all" ]]; then
   append_instruction_section ".github/copilot-instructions.md" "## Rulekit MCP Server Integration" "$INSTRUCTION_CONTENT"
 fi
 
-# 3. JetBrains Setup (does not support AGENTS.md)
+# 3. JetBrains Setup
 if [[ "$EDITOR" == "jetbrains" || "$EDITOR" == "all" ]]; then
   echo "  Configuring JetBrains..."
 
@@ -182,7 +182,7 @@ if [[ "$EDITOR" == "claude" || "$EDITOR" == "all" ]]; then
 
   update_json_file ".mcp.json" "mcpServers" ".mcpServers[\"rulekit-mcp\"] = {type: \"http\", url: \"$BASE_URL\"}" "$MCP_JSON_CONFIG"
 
-  append_instruction_section "CLAUDE.md" "## Rulekit MCP Server Integration" "$INSTRUCTION_CONTENT"
+  append_instruction_section "CLAUDE.md" "# Rulekit MCP Server Integration" "$INSTRUCTION_CONTENT"
 fi
 
 echo "✅ Setup complete!"
