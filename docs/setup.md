@@ -1,5 +1,7 @@
 # Manual Setup
 
+Do these steps in your project(s) folder. **Pro tip:** this can be a folder with multiple projects/repositories.
+
 ## Cursor
 
 1. Add to `.cursor/mcp.json`:
