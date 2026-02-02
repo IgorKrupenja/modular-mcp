@@ -174,6 +174,8 @@ After you are done with the code changes, rebuild the image and restart the cont
 docker compose up -d --build --force-recreate
 ```
 
+You can debug the rules using MCP Inspector too: `pnpm inspect`.
+
 ### Checks
 
 #### CI
@@ -216,4 +218,3 @@ The MCP server provides:
   - `get_mcp_instructions` - Get detailed instructions on how to use this MCP server
   - `list_scope_ids` - List available ids for a scope
   - `search_rules` - Search rules by keyword
-- **Testing with MCP Inspector**: `pnpm inspect`.
