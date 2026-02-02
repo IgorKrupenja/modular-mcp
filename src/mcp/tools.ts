@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
+import { getAvailableAssets, loadAsset } from '@/utils/assets.ts';
 import { getAvailableScopeKeys } from '@/utils/manifest.ts';
 import { getMergedRules, searchRulesByKeyword } from '@/utils/rules.ts';
 import type { RuleScope } from '@/utils/types.ts';
@@ -113,6 +114,54 @@ export function setupTools(server: McpServer): void {
           {
             type: 'text' as const,
             text,
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: List available asset names
+  server.registerTool(
+    'list_assets',
+    {
+      description: 'List all available asset names',
+      inputSchema: z.object({}),
+    },
+    async () => {
+      const assets = await getAvailableAssets();
+      const assetEntries = Object.entries(assets);
+
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: assetEntries.length
+              ? `Available assets:\n\n${assetEntries
+                  .map(([name, { mimeType }]) => `- ${name} (${mimeType})`)
+                  .join('\n')}`
+              : 'No assets available.',
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: Get asset contents by name
+  server.registerTool(
+    'get_asset',
+    {
+      description: 'Get asset contents by name',
+      inputSchema: z.object({
+        name: z.string().describe('Asset name, e.g. projects/buerokratt/sync-upstream.sh'),
+      }),
+    },
+    async (args) => {
+      const asset = await loadAsset(args.name);
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: asset.content,
           },
         ],
       };
