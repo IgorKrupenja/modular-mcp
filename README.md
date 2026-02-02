@@ -151,11 +151,9 @@ This can be checked in CI and with an npm script, see [checks](#checks) below.
 
 ### Assets
 
-<!-- todo write good -->
+Assets are files that are not rules, but are bundled with them. They are not immediately loaded into context but can be loaded when required. This way you can include larger code examples, helper scripts, JSON examples, etc — without bloating the prompt context.
 
-This way you can include larger code examples, helper scripts, etc. One example is the `sync-upstream.sh` script for the Bürokratt projects.
-
-<!-- todo add link to buerokratt script example -->
+One example is the [`sync-upstream.sh`](https://github.com/IgorKrupenja/modular-mcp/blob/7ebf54179ee5550fdd56e799b70be49ca817b040/rules/projects/buerokratt/sync-upstream.sh#L1) script for the Bürokratt — or really any other open-source — projects. See [projects/buerokratt/general.md](https://github.com/IgorKrupenja/rulekit-mcp/blob/main/rules/projects/buerokratt/general.md#fork-synchronization) for more details.
 
 ## Development
 
