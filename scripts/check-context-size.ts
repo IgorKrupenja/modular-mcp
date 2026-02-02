@@ -5,7 +5,7 @@
  * Helps ensure rules don't exceed safe token limits
  */
 
-import { getAvailableScopeIds } from '@/utils/manifest.ts';
+import { getAvailableScopeKeys } from '@/utils/manifest.ts';
 import { getMergedRules } from '@/utils/rules.ts';
 
 // ANSI color codes
@@ -61,10 +61,10 @@ export function getModuleStatus(size: number): { color: string; emoji: string; l
 /**
  * Check merged project sizes
  */
-async function checkProjectSizes(projectId?: string) {
+async function checkProjectSizes(projectKey?: string) {
   console.log(`${colors.bright}${colors.cyan}📦 Merged Project Sizes${colors.reset}\n`);
 
-  const projects = projectId ? [projectId] : await getAvailableScopeIds('project');
+  const projects = projectKey ? [projectKey] : await getAvailableScopeKeys('project');
 
   if (projects.length === 0) {
     console.log(`${colors.yellow}No projects found${colors.reset}\n`);
@@ -76,7 +76,7 @@ async function checkProjectSizes(projectId?: string) {
 
   for (const project of projects) {
     try {
-      const mergedRules = await getMergedRules({ scope: 'project', id: project });
+      const mergedRules = await getMergedRules({ scope: 'project', key: project });
       const size = new TextEncoder().encode(mergedRules).length;
       const tokens = estimateTokens(size);
       const status = getModuleStatus(size);
@@ -113,10 +113,10 @@ async function checkProjectSizes(projectId?: string) {
 /**
  * Check merged tech sizes
  */
-async function checkTechSizes(techId?: string) {
+async function checkTechSizes(techKey?: string) {
   console.log(`${colors.bright}${colors.cyan}🧩 Merged Tech Sizes${colors.reset}\n`);
 
-  const techs = techId ? [techId] : await getAvailableScopeIds('tech');
+  const techs = techKey ? [techKey] : await getAvailableScopeKeys('tech');
 
   if (techs.length === 0) {
     console.log(`${colors.yellow}No techs found${colors.reset}\n`);
@@ -128,7 +128,7 @@ async function checkTechSizes(techId?: string) {
 
   for (const tech of techs) {
     try {
-      const mergedRules = await getMergedRules({ scope: 'tech', id: tech });
+      const mergedRules = await getMergedRules({ scope: 'tech', key: tech });
       const size = new TextEncoder().encode(mergedRules).length;
       const tokens = estimateTokens(size);
       const status = getModuleStatus(size);
@@ -167,17 +167,17 @@ async function checkTechSizes(techId?: string) {
  */
 async function main() {
   const args = process.argv.slice(2);
-  const projectId = args[0];
-  const techId = args[1];
+  const projectKey = args[0];
+  const techKey = args[1];
 
   console.log(`${colors.bright}${colors.blue}🔍 MCP Rules Context Size Checker${colors.reset}\n`);
 
   // Check project sizes
-  const projectResults = await checkProjectSizes(projectId);
+  const projectResults = await checkProjectSizes(projectKey);
   console.log('');
 
   // Check tech sizes
-  const techResults = await checkTechSizes(techId);
+  const techResults = await checkTechSizes(techKey);
   console.log('');
 
   // Summary

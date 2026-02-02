@@ -56,16 +56,16 @@ export function setupResources(server: McpServer): void {
   // Register a resource template for scope-based rules
   server.registerResource(
     'rules',
-    new ResourceTemplate('rules://{scope}/{id}', {
+    new ResourceTemplate('rules://{scope}/{key}', {
       list: async () => {
         const scopeEntries = await getRuleScopeEntries();
 
         return {
-          resources: scopeEntries.flatMap(([scope, ids]) => {
-            return ids.map((id) => ({
-              uri: `rules://${scope}/${id}`,
-              name: `${scope}-${id}`,
-              description: `Rules for ${scope} ${id}`,
+          resources: scopeEntries.flatMap(([scope, keys]) => {
+            return keys.map((key) => ({
+              uri: `rules://${scope}/${key}`,
+              name: `${scope}-${key}`,
+              description: `Rules for ${scope} ${key}`,
               mimeType: 'text/markdown',
             }));
           }),
@@ -79,15 +79,15 @@ export function setupResources(server: McpServer): void {
     async (uri, variables) => {
       // MCP variables may be string or string[] depending on URI parsing.
       const scope = typeof variables.scope === 'string' ? variables.scope : variables.scope?.[0];
-      const id = typeof variables.id === 'string' ? variables.id : variables.id?.[0];
-      if (!scope || !id) {
-        throw new Error('Scope and id are required');
+      const key = typeof variables.key === 'string' ? variables.key : variables.key?.[0];
+      if (!scope || !key) {
+        throw new Error('Scope and key are required');
       }
       if (!isRuleScope(scope)) {
         throw new Error(`Invalid scope: ${scope}`);
       }
 
-      const rules = await getMergedRules({ scope, id });
+      const rules = await getMergedRules({ scope, key });
 
       return {
         contents: [

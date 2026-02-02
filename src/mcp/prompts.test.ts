@@ -41,7 +41,7 @@ describe('setupPrompts', () => {
     const promptConfig = registeredPrompts.get('development-rules');
     expect(promptConfig).toBeDefined();
     expect(promptConfig[0].description).toBe(
-      'Get development rules as a system prompt for a scope and id (works with any AI editor)',
+      'Get development rules as a system prompt for a scope and key (works with any AI editor)',
     );
   });
 
@@ -53,9 +53,9 @@ describe('setupPrompts', () => {
     const promptConfig = registeredPrompts.get('development-rules');
     const handler = promptConfig[1]; // Handler is the second argument
 
-    const result = await handler({ scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = await handler({ scope: 'project', key: 'buerokratt/Service-Module' });
 
-    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', id: 'buerokratt/Service-Module' });
+    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', key: 'buerokratt/Service-Module' });
     expect(result.messages).toBeDefined();
     expect(result.messages.length).toBe(1);
     expect(result.messages[0].role).toBe('user');
@@ -68,7 +68,7 @@ describe('setupPrompts', () => {
     getMergedRulesSpy.mockRestore();
   });
 
-  it('development-rules prompt handler includes scope and id in message', async () => {
+  it('development-rules prompt handler includes scope and key in message', async () => {
     getMergedRulesSpy.mockResolvedValue('Rules content');
 
     setupPrompts(server);
@@ -76,7 +76,7 @@ describe('setupPrompts', () => {
     const promptConfig = registeredPrompts.get('development-rules');
     const handler = promptConfig[1];
 
-    const result = await handler({ scope: 'group', id: 'global' });
+    const result = await handler({ scope: 'group', key: 'global' });
 
     expect(result.messages[0].content.text).toContain('Here are the development rules for group:global:');
 

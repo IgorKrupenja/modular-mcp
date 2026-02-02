@@ -2,6 +2,12 @@
 
 A modular MCP (Model Context Protocol) server for sharing AI coding assistant rules for different projects and tech stacks.
 
+## Highlights
+
+<!-- todo add highlights -->
+
+- Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ## Setup
 
 ### 1. Start the server
@@ -52,72 +58,18 @@ If you followed the setup instructions above, your AI assistant will automatical
 - "Load React rules"
 - "What projects are available in MCP?"
 - "Show available tech stacks"
-- "Find rules about testing in MCP?"
+- "Find rules about testing in MCP"
 - "Load Service-Module rules"
 - "Get rules for this project in MCP" (provided you have selected a file belonging to the project)
+- "Sync fork" or "Sync with upstream" (In Buerokatt repos)
 
-<!-- todo all below needs review -->
+<!-- todo more examples, e.g. create nest project -->
 
-## MCP Server Features
+## Editing rules
 
-Once configured, the MCP server provides:
+The rules are in the `rules/` folder. Rules are loaded fresh on every request, **so no server restart is needed** after you edit rules or manifest.
 
-- **Resources**:
-  - Rules: `rules://{scope}/{id}` (e.g., `rules://project/buerokratt/Service-Module`)
-  - Assets: `assets://{path}` (e.g., `assets://projects/buerokratt/sync-upstream.sh`). This way you can include larger code examples, helper scripts, etc. One example is the `sync-upstream.sh` script for the Bürokratt projects.
-    <!-- todo add link to buerokratt script example -->
-    <!-- todo maybe move to docs and move section above -->
-- **Tools**:
-  - `get_mcp_instructions` - Get detailed instructions on how to use this MCP server
-  - `list_scope_ids` - List available ids for a scope
-  - `search_rules` - Search rules by keyword
-- **Testing with MCP Inspector**: `pnpm inspect`.
-
-## Development
-
-### Editing rules
-
-The `rules/` folder includes example rules for multiple Bürokratt projects. Bürokratt is an open-source public sector virtual assistant platform.
-
-Rules are loaded fresh on every request, **so no server restart is needed**.
-
-#### Global rules
-
-Global rules live in `rules/general.md` and are always included. To always include a group, set `defaults.globalGroup` in `rules/manifest.yml`. Use `USE_GLOBAL_RULES=false` to disable loading the global group; when unset or `true`, the manifest value is used.
-
-#### Manifest structure
-
-`rules/manifest.yml` defines available ids and relationships between projects, groups, techs, and languages. The `defaults.globalGroup` entry is applied on every request unless `USE_GLOBAL_RULES` is set to `false`.
-
-Rules are Markdown files with frontmatter. Use `appliesTo` to declare scope(s) and `rules/manifest.yml` to define projects, groups, techs, and languages. Update the manifest only when you introduce new ids. Example:
-
-```md
----
-appliesTo:
-  projects:
-    - buerokratt/Service-Module
-  groups:
-    - buerokratt
-  techs:
-    - react
-  languages:
-    - typescript
-description: Description of the rule
----
-
-## Some rule set
-
-... rule set content ...
-```
-
-**⚠️ Important note on context size**. To ensure the MCP server works correctly, merged projects/techs should not exceed:
-
-- Safe < 50 KB
-- Warning < 100 KB
-
-This can be with an npm script, see [checks](#checks) below.
-
-### Rules Folder Structure
+### Folder Structure
 
 ```shell
 rules/
@@ -157,7 +109,55 @@ rules/
     └── ...
 ```
 
-### Running the project for local development
+### Manifest
+
+[`rules/manifest.yml`](https://github.com/IgorKrupenja/rulekit-mcp/blob/main/rules/manifest.yml#L17) defines available keys (for projects, groups, techs, and languages) and relationships between them. Having these defined allows for a modular structure. Keys are used for topic-based prompting, e.g. "Get NestJS rules from MCP".
+
+`dependsOn` is used to declare dependencies between keys. E.g. if you decalre that `react` depends on `typescript`, then when you ask for "Get React rules from MCP" you will also get `typescript` rules.
+
+The `defaults.globalGroup` entry is applied on every request unless `USE_GLOBAL_RULES` environment variable is set to `false`.
+
+### Rule format
+
+Rules are Markdown files with frontmatter. Use `appliesTo` in frontmatter to declare which keys the rule applies to. Keys are defined in the [manifest](#manifest).
+
+Example:
+
+```md
+---
+appliesTo:
+  projects:
+    - buerokratt/Service-Module
+  groups:
+    - buerokratt
+  techs:
+    - react
+  languages:
+    - typescript
+description: Description of the rule
+---
+
+## Some rule set
+
+... rule set content ...
+```
+
+**⚠️ Important note on context size**. To ensure the MCP server works correctly, merged projects/techs should not exceed:
+
+- Safe < 50 KB
+- Warning < 100 KB
+
+This can be checked in CI and with an npm script, see [checks](#checks) below.
+
+### Assets
+
+Assets are files that are not rules, but are bundled with them. They are not immediately loaded into context but can be loaded when required. This way you can include larger code examples, helper scripts, JSON examples, etc — without bloating the prompt context.
+
+One example is the [`sync-upstream.sh`](https://github.com/IgorKrupenja/modular-mcp/blob/7ebf54179ee5550fdd56e799b70be49ca817b040/rules/projects/buerokratt/sync-upstream.sh#L1) script for the Bürokratt — or really any other open-source — projects. See [projects/buerokratt/general.md](https://github.com/IgorKrupenja/rulekit-mcp/blob/main/rules/projects/buerokratt/general.md#fork-synchronization) for more details.
+
+## Development
+
+### Running the project
 
 ```sh
 # Install the correct Node version
@@ -175,6 +175,8 @@ After you are done with the code changes, rebuild the image and restart the cont
 docker compose up -d --build --force-recreate
 ```
 
+You can debug the rules using MCP Inspector too: `pnpm inspect`.
+
 ### Checks
 
 #### CI
@@ -185,7 +187,7 @@ The following checks run automatically in CI on push and pull requests:
 - **lint**: Runs ESLint to check code quality and style
 - **lint-markdown**: Lints markdown files (rules and README) using markdownlint
 - **typecheck**: Validates TypeScript types without emitting files
-- **validate**: Validates rule files (frontmatter + manifest structure + markdown syntax)
+- **validate**: Validates rule files (manifest structure + rule frontmatter + rule markdown syntax)
 - **check-context-size**: Checks merged projects/techs against safe token limits
 - **test**: Runs tests
 
@@ -200,6 +202,21 @@ pnpm lint:markdown
 pnpm typecheck
 pnpm validate
 pnpm check-context-size
-pnpm check-context-size <project-id> <tech-id>
+pnpm check-context-size <project-key> <tech-key>
 pnpm test
 ```
+
+### MCP Server Features
+
+The MCP server provides:
+
+- **Resources**:
+  - Rules: `rules://{scope}/{key}` (e.g., `rules://project/buerokratt/Service-Module`)
+  - Assets: `assets://{path}` (e.g., `assets://projects/buerokratt/sync-upstream.sh`).
+- **Tools**:
+  - `get_rules` - Fetch rules for a scope/key pair
+  - `get_mcp_instructions` - Show server usage guidance
+  - `list_scope_keys` - List keys for a given scope
+  - `search_rules` - Search rules by keyword
+  - `list_assets` - List bundled asset paths
+  - `get_asset` - Fetch asset contents by path

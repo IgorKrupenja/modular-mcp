@@ -21,7 +21,7 @@ import type {
   RulesManifest,
 } from './types.ts';
 
-import { getAvailableScopeIds, loadManifest, resolveRequestScopes } from '@/utils/manifest.ts';
+import { getAvailableScopeKeys, loadManifest, resolveRequestScopes } from '@/utils/manifest.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +32,7 @@ export const RULE_SCOPES = ['project', 'group', 'tech', 'language'] as const sat
 export const isRuleScope = (value: string): value is RuleScope => RULE_SCOPES.includes(value as RuleScope);
 
 export async function getRuleScopeEntries(): Promise<readonly (readonly [RuleScope, string[]])[]> {
-  return Promise.all(RULE_SCOPES.map(async (scope) => [scope, await getAvailableScopeIds(scope)] as const));
+  return Promise.all(RULE_SCOPES.map(async (scope) => [scope, await getAvailableScopeKeys(scope)] as const));
 }
 
 /**
@@ -114,7 +114,7 @@ function hasIntersection(values: string[] | undefined, scopeSet: Set<string>): b
  * Merge rules into a single markdown string
  */
 export function mergeRules(rules: RuleFile[], request: RuleRequest): string {
-  const heading = `# Rules (${request.scope}:${request.id})\n\n`;
+  const heading = `# Rules (${request.scope}:${request.key})\n\n`;
   if (rules.length === 0) return `${heading}_No rules found._`;
 
   const parts: string[] = [heading];
@@ -132,13 +132,13 @@ export function mergeRules(rules: RuleFile[], request: RuleRequest): string {
 export async function searchRulesByKeyword(params: {
   keyword: string;
   scope?: RuleScope;
-  id?: string;
+  key?: string;
 }): Promise<string> {
   const [allRules, manifest] = await Promise.all([loadAllRules(), loadManifest()]);
   const keyword = params.keyword.toLowerCase();
   const results: string[] = [];
   const resolvedScopes =
-    params.scope && params.id ? resolveRequestScopes({ scope: params.scope, id: params.id }, manifest) : null;
+    params.scope && params.key ? resolveRequestScopes({ scope: params.scope, key: params.key }, manifest) : null;
 
   for (const rule of allRules) {
     if (resolvedScopes && !ruleAppliesToScopes(rule, resolvedScopes)) {
@@ -160,7 +160,7 @@ export async function searchRulesByKeyword(params: {
   }
 
   if (results.length === 0) {
-    const scopeText = params.scope && params.id ? ` in ${params.scope} "${params.id}"` : '';
+    const scopeText = params.scope && params.key ? ` in ${params.scope} "${params.key}"` : '';
     return `No rules found containing "${params.keyword}"${scopeText}.`;
   }
 

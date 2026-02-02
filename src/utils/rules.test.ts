@@ -57,11 +57,11 @@ describe('searchRulesByKeyword', () => {
     expect(result).toContain('No rules found');
   });
 
-  it('includes scoped results when scope and id provided', async () => {
+  it('includes scoped results when scope and key provided', async () => {
     const result = await searchRulesByKeyword({
       keyword: 'rules',
       scope: 'project',
-      id: 'buerokratt/Service-Module',
+      key: 'buerokratt/Service-Module',
     });
 
     expect(result).toContain('Found');
@@ -71,7 +71,7 @@ describe('searchRulesByKeyword', () => {
 
 describe('ruleAppliesToScopes', () => {
   it('matches rules across any appliesTo category', () => {
-    const scopes = resolveRequestScopes({ scope: 'tech', id: 'react' }, manifest);
+    const scopes = resolveRequestScopes({ scope: 'tech', key: 'react' }, manifest);
     const rule = createRuleFile('rules/test.md', { techs: ['react'] }, 'React rule');
 
     expect(ruleAppliesToScopes(rule, scopes)).toBe(true);
@@ -85,7 +85,7 @@ describe('getRulesForRequest', () => {
       createRuleFile('rules/service.md', { projects: ['buerokratt/Service-Module'] }, 'Service rule'),
     ];
 
-    const result = getRulesForRequest(mockRules, manifest, { scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = getRulesForRequest(mockRules, manifest, { scope: 'project', key: 'buerokratt/Service-Module' });
 
     expect(result).toHaveLength(2);
     expect(result[0]?.content).toBe('Global rule');
@@ -95,7 +95,7 @@ describe('getRulesForRequest', () => {
 
 describe('getMergedRules', () => {
   it('returns merged markdown for a request', async () => {
-    const result = await getMergedRules({ scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = await getMergedRules({ scope: 'project', key: 'buerokratt/Service-Module' });
 
     expect(result).toContain('# Rules (project:buerokratt/Service-Module)');
     expect(result).not.toContain('_No rules found._');

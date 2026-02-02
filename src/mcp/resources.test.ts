@@ -104,14 +104,14 @@ describe('setupResources', () => {
     expect(resourceConfig).toBeDefined();
     const readHandler = resourceConfig?.[2] as (
       uri: URL,
-      variables: { scope: string; id: string },
+      variables: { scope: string; key: string },
     ) => Promise<{ contents: Array<{ uri: string; mimeType: string; text: string }> }>;
     expect(typeof readHandler).toBe('function');
 
     const uri = new URL('rules://project/buerokratt/Service-Module');
-    const result = await readHandler(uri, { scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = await readHandler(uri, { scope: 'project', key: 'buerokratt/Service-Module' });
 
-    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', id: 'buerokratt/Service-Module' });
+    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', key: 'buerokratt/Service-Module' });
     expect(result.contents).toBeDefined();
     expect(result.contents.length).toBe(1);
     const content = result.contents[0]!;
@@ -131,14 +131,14 @@ describe('setupResources', () => {
     expect(resourceConfig).toBeDefined();
     const readHandler = resourceConfig?.[2] as (
       uri: URL,
-      variables: { scope: string; id: string },
+      variables: { scope: string; key: string },
     ) => Promise<{ contents: Array<{ text: string }> }>;
     expect(typeof readHandler).toBe('function');
 
     const uri = new URL('rules://group/global');
-    const result = await readHandler(uri, { scope: 'group', id: 'global' });
+    const result = await readHandler(uri, { scope: 'group', key: 'global' });
 
-    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'group', id: 'global' });
+    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'group', key: 'global' });
     const content = result.contents[0]!;
     expect(content.text).toBe('Rules content');
 
@@ -154,21 +154,21 @@ describe('setupResources', () => {
     expect(resourceConfig).toBeDefined();
     const readHandler = resourceConfig?.[2] as (
       uri: URL,
-      variables: { scope: string | string[]; id: string | string[] },
+      variables: { scope: string | string[]; key: string | string[] },
     ) => Promise<{ contents: Array<{ text: string }> }>;
     expect(typeof readHandler).toBe('function');
 
     const uri = new URL('rules://language/typescript');
-    const result = await readHandler(uri, { scope: ['language'], id: ['typescript'] });
+    const result = await readHandler(uri, { scope: ['language'], key: ['typescript'] });
 
-    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'language', id: 'typescript' });
+    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'language', key: 'typescript' });
     const content = result.contents[0]!;
     expect(content.text).toBe('Rules content');
 
     getMergedRulesSpy.mockRestore();
   });
 
-  it('rules resource read handler throws error when scope or id is missing', async () => {
+  it('rules resource read handler throws error when scope or key is missing', async () => {
     setupResources(server);
 
     const resourceConfig = registeredResources.get('rules');
@@ -178,7 +178,7 @@ describe('setupResources', () => {
 
     const uri = new URL('rules://project/buerokratt/Service-Module');
 
-    await expect(readHandler(uri, {})).rejects.toThrow('Scope and id are required');
+    await expect(readHandler(uri, {})).rejects.toThrow('Scope and key are required');
   });
 });
 

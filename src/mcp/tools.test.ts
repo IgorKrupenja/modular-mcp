@@ -14,7 +14,7 @@ vi.mock('node:fs/promises', () => ({
 describe('setupTools', () => {
   let server: McpServer;
   let registeredTools: Map<string, any>;
-  let getAvailableScopeIdsSpy: ReturnType<typeof vi.spyOn>;
+  let getAvailableScopeKeysSpy: ReturnType<typeof vi.spyOn>;
   let getMergedRulesSpy: ReturnType<typeof vi.spyOn>;
   let searchRulesSpy: ReturnType<typeof vi.spyOn>;
 
@@ -39,7 +39,7 @@ describe('setupTools', () => {
       return (originalRegisterTool as any)(name, ...args);
     };
 
-    getAvailableScopeIdsSpy = vi.spyOn(manifestModule, 'getAvailableScopeIds');
+    getAvailableScopeKeysSpy = vi.spyOn(manifestModule, 'getAvailableScopeKeys');
     getMergedRulesSpy = vi.spyOn(rulesModule, 'getMergedRules');
     searchRulesSpy = vi.spyOn(rulesModule, 'searchRulesByKeyword');
   });
@@ -50,7 +50,7 @@ describe('setupTools', () => {
     expect(registeredTools.has('get_rules')).toBe(true);
     const toolConfig = registeredTools.get('get_rules');
     expect(toolConfig).toBeDefined();
-    expect(toolConfig[0].description).toBe('Get rules for a specific scope and id');
+    expect(toolConfig[0].description).toBe('Get rules for a specific scope and key');
   });
 
   it('get_rules tool handler returns merged rules', async () => {
@@ -61,9 +61,9 @@ describe('setupTools', () => {
     const toolConfig = registeredTools.get('get_rules');
     const handler = toolConfig[1]; // Handler is the second argument
 
-    const result = await handler({ scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = await handler({ scope: 'project', key: 'buerokratt/Service-Module' });
 
-    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', id: 'buerokratt/Service-Module' });
+    expect(getMergedRulesSpy).toHaveBeenCalledWith({ scope: 'project', key: 'buerokratt/Service-Module' });
     expect(result.content).toBeDefined();
     expect(result.content[0].type).toBe('text');
     expect(result.content[0].text).toBe('# Test Rules\n\nContent here');
@@ -98,31 +98,31 @@ describe('setupTools', () => {
     expect(result.content[0].text).toContain('Detailed instructions here...');
   });
 
-  it('registers list_scope_ids tool', () => {
+  it('registers list_scope_keys tool', () => {
     setupTools(server);
 
-    expect(registeredTools.has('list_scope_ids')).toBe(true);
-    const toolConfig = registeredTools.get('list_scope_ids');
+    expect(registeredTools.has('list_scope_keys')).toBe(true);
+    const toolConfig = registeredTools.get('list_scope_keys');
     expect(toolConfig).toBeDefined();
-    expect(toolConfig[0].description).toBe('List all available identifiers for a scope');
+    expect(toolConfig[0].description).toBe('List all available keys for a scope');
   });
 
-  it('list_scope_ids tool handler returns formatted scope list', async () => {
-    getAvailableScopeIdsSpy.mockResolvedValue(['buerokratt/Service-Module', 'buerokratt/Buerokratt-Chatbot']);
+  it('list_scope_keys tool handler returns formatted scope list', async () => {
+    getAvailableScopeKeysSpy.mockResolvedValue(['buerokratt/Service-Module', 'buerokratt/Buerokratt-Chatbot']);
 
     setupTools(server);
 
-    const toolConfig = registeredTools.get('list_scope_ids');
+    const toolConfig = registeredTools.get('list_scope_keys');
     const handler = toolConfig[1];
 
     const result = await handler({ scope: 'project' });
 
-    expect(getAvailableScopeIdsSpy).toHaveBeenCalled();
-    expect(result.content[0].text).toContain('Available project ids:');
+    expect(getAvailableScopeKeysSpy).toHaveBeenCalled();
+    expect(result.content[0].text).toContain('Available project keys:');
     expect(result.content[0].text).toContain('- buerokratt/Service-Module');
     expect(result.content[0].text).toContain('- buerokratt/Buerokratt-Chatbot');
 
-    getAvailableScopeIdsSpy.mockRestore();
+    getAvailableScopeKeysSpy.mockRestore();
   });
 
   it('registers search_rules tool', () => {
@@ -144,7 +144,7 @@ describe('setupTools', () => {
 
     const result = await handler({ keyword: 'SQL' });
 
-    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: undefined, id: undefined });
+    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: undefined, key: undefined });
     expect(result.content[0].text).toContain('Found 1 rule(s)');
     expect(result.content[0].text).toContain('test1.md');
 
@@ -161,12 +161,12 @@ describe('setupTools', () => {
     const toolConfig = registeredTools.get('search_rules');
     const handler = toolConfig[1];
 
-    const result = await handler({ keyword: 'SQL', scope: 'project', id: 'buerokratt/Service-Module' });
+    const result = await handler({ keyword: 'SQL', scope: 'project', key: 'buerokratt/Service-Module' });
 
     expect(result.content[0].text).toContain('Found 2 rule(s)');
     expect(result.content[0].text).toContain('test1.md');
     expect(result.content[0].text).toContain('test2.md');
-    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: 'project', id: 'buerokratt/Service-Module' });
+    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: 'project', key: 'buerokratt/Service-Module' });
 
     searchRulesSpy.mockRestore();
   });
@@ -199,7 +199,7 @@ describe('setupTools', () => {
 
     expect(result.content[0].text).toContain('Found 1 rule(s)');
     expect(result.content[0].text).toContain('test1.md');
-    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: undefined, id: undefined });
+    expect(searchRulesSpy).toHaveBeenCalledWith({ keyword: 'SQL', scope: undefined, key: undefined });
 
     searchRulesSpy.mockRestore();
   });

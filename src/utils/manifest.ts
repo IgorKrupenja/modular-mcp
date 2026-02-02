@@ -47,9 +47,9 @@ export async function loadManifest(): Promise<RulesManifest> {
 }
 
 /**
- * Get available IDs for a scope
+ * Get available keys for a scope
  */
-export async function getAvailableScopeIds(scope: RuleScope): Promise<string[]> {
+export async function getAvailableScopeKeys(scope: RuleScope): Promise<string[]> {
   const manifest = await loadManifest();
 
   switch (scope) {
@@ -70,6 +70,7 @@ export async function getAvailableScopeIds(scope: RuleScope): Promise<string[]> 
  * Resolve scopes for a request
  */
 export function resolveRequestScopes(request: RuleRequest, manifest: RulesManifest): ResolvedScopes {
+  const requestKey = request.key as string;
   const scopes: ResolvedScopes = {
     projects: new Set<string>(),
     groups: new Set<string>(),
@@ -79,16 +80,16 @@ export function resolveRequestScopes(request: RuleRequest, manifest: RulesManife
 
   switch (request.scope) {
     case 'project':
-      resolveProject(scopes, manifest, request.id);
+      resolveProject(scopes, manifest, requestKey);
       break;
     case 'group':
-      scopes.groups.add(request.id);
+      scopes.groups.add(requestKey);
       break;
     case 'tech':
-      resolveTech(scopes, manifest, request.id, new Set<string>());
+      resolveTech(scopes, manifest, requestKey, new Set<string>());
       break;
     case 'language':
-      scopes.languages.add(request.id);
+      scopes.languages.add(requestKey);
       break;
   }
 
@@ -96,10 +97,10 @@ export function resolveRequestScopes(request: RuleRequest, manifest: RulesManife
   return scopes;
 }
 
-function resolveProject(scopes: ResolvedScopes, manifest: RulesManifest, projectId: string): void {
-  scopes.projects.add(projectId);
+function resolveProject(scopes: ResolvedScopes, manifest: RulesManifest, projectKey: string): void {
+  scopes.projects.add(projectKey);
 
-  const project = manifest.projects?.[projectId];
+  const project = manifest.projects?.[projectKey];
   if (!project) {
     return;
   }
@@ -108,8 +109,8 @@ function resolveProject(scopes: ResolvedScopes, manifest: RulesManifest, project
     scopes.groups.add(group);
   }
 
-  for (const tech of project.techs ?? []) {
-    resolveTech(scopes, manifest, tech, new Set<string>());
+  for (const techKey of project.techs ?? []) {
+    resolveTech(scopes, manifest, techKey, new Set<string>());
   }
 
   for (const language of project.languages ?? []) {
@@ -117,15 +118,15 @@ function resolveProject(scopes: ResolvedScopes, manifest: RulesManifest, project
   }
 }
 
-function resolveTech(scopes: ResolvedScopes, manifest: RulesManifest, techId: string, seen: Set<string>): void {
-  if (seen.has(techId)) {
+function resolveTech(scopes: ResolvedScopes, manifest: RulesManifest, techKey: string, seen: Set<string>): void {
+  if (seen.has(techKey)) {
     return;
   }
 
-  seen.add(techId);
-  scopes.techs.add(techId);
+  seen.add(techKey);
+  scopes.techs.add(techKey);
 
-  const tech = manifest.techs?.[techId];
+  const tech = manifest.techs?.[techKey];
   if (!tech) {
     return;
   }

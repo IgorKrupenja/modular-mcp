@@ -10,7 +10,8 @@ import { join } from 'node:path';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 
-import { getAvailableScopeIds } from '@/utils/manifest.ts';
+import { getAvailableAssets, loadAsset } from '@/utils/assets.ts';
+import { getAvailableScopeKeys } from '@/utils/manifest.ts';
 import { getMergedRules, searchRulesByKeyword } from '@/utils/rules.ts';
 import type { RuleScope } from '@/utils/types.ts';
 
@@ -21,14 +22,14 @@ export function setupTools(server: McpServer): void {
   server.registerTool(
     'get_rules',
     {
-      description: 'Get rules for a specific scope and id',
+      description: 'Get rules for a specific scope and key',
       inputSchema: z.object({
         scope: z.enum(['project', 'group', 'tech', 'language']).describe('Scope type'),
-        id: z.string().describe('Scope identifier'),
+        key: z.string().describe('Scope key'),
       }),
     },
     async (args) => {
-      const rules = await getMergedRules({ scope: args.scope, id: args.id });
+      const rules = await getMergedRules({ scope: args.scope, key: args.key });
       return {
         content: [
           {
@@ -61,23 +62,23 @@ export function setupTools(server: McpServer): void {
     },
   );
 
-  // Tool: List available ids for a scope
+  // Tool: List available keys for a scope
   server.registerTool(
-    'list_scope_ids',
+    'list_scope_keys',
     {
-      description: 'List all available identifiers for a scope',
+      description: 'List all available keys for a scope',
       inputSchema: z.object({
         scope: z.enum(['project', 'group', 'tech', 'language']).describe('Scope type'),
       }),
     },
     async (args) => {
-      const ids = await getAvailableScopeIds(args.scope as RuleScope);
+      const keys = await getAvailableScopeKeys(args.scope as RuleScope);
 
       return {
         content: [
           {
             type: 'text' as const,
-            text: `Available ${args.scope} ids:\n\n${ids.map((id) => `- ${id}`).join('\n')}`,
+            text: `Available ${args.scope} keys:\n\n${keys.map((key) => `- ${key}`).join('\n')}`,
           },
         ],
       };
@@ -95,24 +96,72 @@ export function setupTools(server: McpServer): void {
           .enum(['project', 'group', 'tech', 'language'])
           .optional()
           .describe('Optional: limit search to a scope'),
-        id: z.string().optional().describe('Optional: scope identifier'),
+        key: z.string().optional().describe('Optional: scope key'),
       }),
     },
     async (args) => {
-      if ((args.scope && !args.id) || (!args.scope && args.id)) {
-        throw new Error('Both scope and id must be provided together.');
+      if ((args.scope && !args.key) || (!args.scope && args.key)) {
+        throw new Error('Both scope and key must be provided together.');
       }
 
       const text = await searchRulesByKeyword({
         keyword: args.keyword,
         scope: args.scope,
-        id: args.id,
+        key: args.key,
       });
       return {
         content: [
           {
             type: 'text' as const,
             text,
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: List available asset names
+  server.registerTool(
+    'list_assets',
+    {
+      description: 'List all available asset names',
+      inputSchema: z.object({}),
+    },
+    async () => {
+      const assets = await getAvailableAssets();
+      const assetEntries = Object.entries(assets);
+
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: assetEntries.length
+              ? `Available assets:\n\n${assetEntries
+                  .map(([name, { mimeType }]) => `- ${name} (${mimeType})`)
+                  .join('\n')}`
+              : 'No assets available.',
+          },
+        ],
+      };
+    },
+  );
+
+  // Tool: Get asset contents by name
+  server.registerTool(
+    'get_asset',
+    {
+      description: 'Get asset contents by name',
+      inputSchema: z.object({
+        name: z.string().describe('Asset name, e.g. projects/buerokratt/sync-upstream.sh'),
+      }),
+    },
+    async (args) => {
+      const asset = await loadAsset(args.name);
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: asset.content,
           },
         ],
       };

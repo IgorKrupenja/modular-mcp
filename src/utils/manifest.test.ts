@@ -73,8 +73,8 @@ describe('loadManifest', () => {
   });
 });
 
-describe('getAvailableScopeIds', () => {
-  it('returns sorted project ids', async () => {
+describe('getAvailableScopeKeys', () => {
+  it('returns sorted project keys', async () => {
     vi.doMock('node:fs/promises', () => ({
       readFile: vi
         .fn()
@@ -88,8 +88,8 @@ describe('getAvailableScopeIds', () => {
         ),
     }));
 
-    const { getAvailableScopeIds } = await import('./manifest.ts');
-    const result = await getAvailableScopeIds('project');
+    const { getAvailableScopeKeys } = await import('./manifest.ts');
+    const result = await getAvailableScopeKeys('project');
 
     expect(result).toEqual([
       'buerokratt/Analytics-Module',
@@ -131,7 +131,7 @@ describe('resolveRequestScopes', () => {
       },
     };
 
-    const scopes = resolveRequestScopes({ scope: 'project', id: 'buerokratt/Service-Module' }, manifest);
+    const scopes = resolveRequestScopes({ scope: 'project', key: 'buerokratt/Service-Module' }, manifest);
 
     expect(scopes.projects.has('buerokratt/Service-Module')).toBe(true);
     expect(scopes.groups.has('global')).toBe(true);
@@ -150,7 +150,7 @@ describe('resolveRequestScopes', () => {
       },
     };
 
-    const scopes = resolveRequestScopes({ scope: 'group', id: 'custom' }, manifest);
+    const scopes = resolveRequestScopes({ scope: 'group', key: 'custom' }, manifest);
 
     expect(scopes.groups.has('custom')).toBe(true);
     expect(scopes.groups.has('global')).toBe(false);
@@ -167,7 +167,7 @@ describe('resolveRequestScopes', () => {
       },
     };
 
-    const scopes = resolveRequestScopes({ scope: 'group', id: 'custom' }, manifest);
+    const scopes = resolveRequestScopes({ scope: 'group', key: 'custom' }, manifest);
 
     expect(scopes.groups.has('custom')).toBe(true);
     expect(scopes.groups.has('global')).toBe(true);

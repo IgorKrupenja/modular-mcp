@@ -1,6 +1,6 @@
 # Manual Setup
 
-Manual installation instructions for each editor. Run these in your project folder.
+Do these steps in your project(s) folder. **Pro tip:** this can be a folder with multiple projects/repositories.
 
 ## Cursor
 

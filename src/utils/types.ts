@@ -18,7 +18,7 @@ export type RuleScope = 'project' | 'group' | 'tech' | 'language';
 
 export interface RuleRequest {
   scope: RuleScope;
-  id: string;
+  key: string;
 }
 
 export interface RuleFrontmatter {
