@@ -9,4 +9,6 @@ services:
       - ./rules:/app/rules:ro
     ports:
       - '3627:3627'
+    environment:
+      - USE_GLOBAL_RULES=true
     restart: unless-stopped
