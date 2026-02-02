@@ -61,12 +61,13 @@ If you followed the setup instructions above, your AI assistant will automatical
 - "Find rules about testing in MCP"
 - "Load Service-Module rules"
 - "Get rules for this project in MCP" (provided you have selected a file belonging to the project)
+- "Sync fork" or "Sync with upstream" (In Buerokatt repos)
 
 <!-- todo more examples, e.g. create nest project -->
 
 ## Editing rules
 
-The rules are in the `rules/` folder. Rules are loaded fresh on every request, **so no server restart is needed** after you edit a rule.
+The rules are in the `rules/` folder. Rules are loaded fresh on every request, **so no server restart is needed** after you edit rules or manifest.
 
 ### Folder Structure
 
@@ -110,7 +111,7 @@ rules/
 
 ### Manifest
 
-[`rules/manifest.yml`](https://github.com/IgorKrupenja/rulekit-mcp/blob/main/rules/manifest.yml#L17) defines available keys (for projects, groups, techs, and languages) and relationships between them. Keys are used for topic-based prompting, e.g. "Get NestJS rules from MCP".
+[`rules/manifest.yml`](https://github.com/IgorKrupenja/rulekit-mcp/blob/main/rules/manifest.yml#L17) defines available keys (for projects, groups, techs, and languages) and relationships between them. Having these defined allows for a modular structure. Keys are used for topic-based prompting, e.g. "Get NestJS rules from MCP".
 
 `dependsOn` is used to declare dependencies between keys. E.g. if you decalre that `react` depends on `typescript`, then when you ask for "Get React rules from MCP" you will also get `typescript` rules.
 
