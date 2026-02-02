@@ -33,6 +33,12 @@ Use MCP resources to load rules directly into context. The resource URI format i
 **When the exact key is unclear or user asks for available options:**
 Use the `list_scope_keys` tool to discover what's available for that scope before loading.
 
+### Assets Resource: `assets://{name}`
+
+Use MCP resources to load bundled helper assets (scripts, templates, etc) directly into context. The resource URI format is:
+
+- `assets://{path}` - Asset content by path (e.g., `projects/buerokratt/sync-upstream.sh`)
+
 ## Available MCP Tools
 
 1. **get_rules** - Get rules for a specific scope and key
@@ -52,6 +58,15 @@ Use the `list_scope_keys` tool to discover what's available for that scope befor
 4. **get_mcp_instructions** - Get detailed instructions on how to use this MCP server
    - No parameters required
    - Use when: You need guidance on how to use this MCP server effectively
+
+5. **list_assets** - List all available asset names
+   - No parameters required
+   - Use when: You need to discover available assets (paths and MIME types)
+
+6. **get_asset** - Get asset contents by name
+   - Parameters: `name` (string)
+   - Use when: MCP resource APIs are unavailable and you need asset content
+   - Example: `name: "projects/buerokratt/sync-upstream.sh"`
 
 ## How to Respond to User Requests
 
