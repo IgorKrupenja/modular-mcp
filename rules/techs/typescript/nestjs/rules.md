@@ -13,6 +13,7 @@ description: NestJS-specific code quality rules and best practices
 - Always inject config via `@Inject(configFactory.KEY)` and `ConfigType<typeof configFactory>` instead of accessing config directly.
 - Always use specific Swagger decorators like `ApiOkResponse` and `ApiNotFoundResponse` instead of `ApiResponse`.
 - DTO and interface properties should be marked as `readonly` if they are not intended to be modified.
+- `e2e` tests: if you write a test that actually modifies anything in DB, it makes sense to check if DB was actually modified. **Not** only checking what is e.g. returned by endpoint.
 
 ## Bootstrapping with nestjs-starter
 
