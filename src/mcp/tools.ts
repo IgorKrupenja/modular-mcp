@@ -1,9 +1,3 @@
-/**
- * MCP Tool Handlers
- *
- * Handles tool-related requests (querying and searching rules)
- */
-
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -15,9 +9,6 @@ import { getAvailableScopeKeys } from '@/utils/manifest.ts';
 import { getMergedRules, searchRulesByKeyword } from '@/utils/rules.ts';
 import type { RuleScope } from '@/utils/types.ts';
 
-/**
- * Set up tool handlers for the MCP server
- */
 export function setupTools(server: McpServer): void {
   server.registerTool(
     'get_rules',

@@ -8,6 +8,7 @@ The goal is to make it easy to share rules across different projects and support
 
 - Modular structure with different scopes for rules: projects, groups, techs, and languages. So e.g. asking to load rules in Buerokratt Service-Module repo will load repo-specific rules (project), general Buerokratt DSL/SQL rules (group), general React rules (tech) and general TypeScript rules (language). See [editing rules](#editing-rules) for more details.
 - Has [support](#2-configure-your-editor) for different editors. MCP [features](#mcp-server-features) are also implemented in a way to allow this.
+- Has support for lazy-loaded [assets](#assets). These can be bigger code snippets, helper scripts, YAML/JSON that are not loaded into context immediately — but only when actually needed based on user prompts.
 - Has a basic set of NestJS rules. Can [bootstrap you a NestJS project](rules/techs/typescript/nestjs/rules.md) from a starter repo, will create/modify GitHub Actions CI workflows based on the project structure.
 
 ## Setup
@@ -222,4 +223,4 @@ The MCP server provides:
   - `list_assets` - List bundled asset paths
   - `get_asset` - Fetch asset contents by path
 - **Prompts**:
-  -
+  - `development-rules` - Get development rules as a system prompt for a scope/key pair

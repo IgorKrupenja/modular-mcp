@@ -1,17 +1,8 @@
-/**
- * MCP Resource Handlers
- *
- * Handles resource-related requests (listing and reading rules)
- */
-
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js';
 
 import { getAvailableAssets, loadAsset } from '@/utils/assets.ts';
 import { getMergedRules, getRuleScopeEntries, isRuleScope } from '@/utils/rules.ts';
 
-/**
- * Set up resource handlers for the MCP server
- */
 export function setupResources(server: McpServer): void {
   server.registerResource(
     'assets',
