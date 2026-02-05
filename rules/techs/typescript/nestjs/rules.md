@@ -12,8 +12,11 @@ description: NestJS-specific code quality rules and best practices
 - For imports, `.js` extensions should be appended, e.g.: `import { config } from './config.js';`
 - Always inject config via `@Inject(configFactory.KEY)` and `ConfigType<typeof configFactory>` instead of accessing config directly.
 - Always use specific Swagger decorators like `ApiOkResponse` and `ApiNotFoundResponse` instead of `ApiResponse`.
+- When using polymorphic response DTOs in Swagger (`oneOf`, `anyOf`, custom decorators), register all referenced models with `@ApiExtraModels(...)` so they appear in the schema.
 - DTO and interface properties should be marked as `readonly` if they are not intended to be modified.
 - `e2e` tests: if you write a test that actually modifies anything in DB, it makes sense to check if DB was actually modified. **Not** only checking what is e.g. returned by endpoint.
+- Script naming (non-watch focus): use `*:check` for read-only checks (e.g. `format:check`, `lint:check`); use `test:run` and `test:e2e:run` for non-watch test runs; plain `test` is watch by default.
+- After making changes in Prisma, suggest to run `prisma:generate`, `prisma:seed` and/or `prisma:migrate` scripts. Depending on what is necessary.
 
 ## Bootstrapping with nestjs-starter
 
