@@ -11,6 +11,7 @@ description: NestJS-specific code quality rules and best practices
 - Use `vitest`, not `jest`.
 - For imports, `.js` extensions should be appended, e.g.: `import { config } from './config.js';`
 - Always inject config via `@Inject(configFactory.KEY)` and `ConfigType<typeof configFactory>` instead of accessing config directly.
+- Always use specific Swagger decorators like `ApiOkResponse` and `ApiNotFoundResponse` instead of `ApiResponse`.
 
 ## Bootstrapping with nestjs-starter
 
@@ -23,6 +24,7 @@ description: NestJS-specific code quality rules and best practices
   - Monorepo (API in subfolder): move the starter `.github` contents to the repo root and adapt actions to be monorepo-aware. Example composite action (store as `.github/actions/pnpm-install/action.yml`):
     - `inputs.working-directory` is required and used by `package_json_file`, `node-version-file`, `cache-dependency-path`, and `working-directory`.
     - Example snippet:
+
       ```yml
       name: pnpm-install
       inputs:
@@ -43,6 +45,7 @@ description: NestJS-specific code quality rules and best practices
             working-directory: ${{ inputs.working-directory }}
             shell: bash
       ```
+
     - Example workflow usage (`.github/workflows/api-run-checks.yml`):
 
       ```yml

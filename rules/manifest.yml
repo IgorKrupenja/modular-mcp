@@ -36,6 +36,10 @@ defaults:
   globalGroup: global
 
 projects:
+  rulekit-mcp:
+    description: Rulekit MCP server
+    languages:
+      - typescript
   buerokratt/Service-Module:
     description: Bürokratt Service Module
     groups:
