@@ -10,6 +10,7 @@ description: NestJS-specific code quality rules and best practices
 - Use `pnpm`, not `npm` or `yarn`.
 - Use `vitest`, not `jest`.
 - For imports, `.js` extensions should be appended, e.g.: `import { config } from './config.js';`
+- Always inject config via `@Inject(configFactory.KEY)` and `ConfigType<typeof configFactory>` instead of accessing config directly.
 
 ## Bootstrapping with nestjs-starter
 

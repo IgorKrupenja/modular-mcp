@@ -21,7 +21,7 @@ description: Global code quality rules and development best practices
 - **Unused Code**: Actively check for unused variables, functions etc and either use them (could be a bug) or remove
   them if no longer necessary
 - **Avoid Trivial Comments**: Do not add trivial comments in code, if they are obvious and code is simple and
-  self-explanatory
+  self-explanatory. Avoid describing what code does (should be clear from the code itself) — instead, explain **why** (e.g. business logic). Comments should be **concise**.
 
 ### Linting
 
