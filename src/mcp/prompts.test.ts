@@ -34,23 +34,23 @@ describe('setupPrompts', () => {
     getMergedRulesSpy = vi.spyOn(rulesModule, 'getMergedRules');
   });
 
-  it('registers development-rules prompt', () => {
+  it('registers development_rules prompt', () => {
     setupPrompts(server);
 
-    expect(registeredPrompts.has('development-rules')).toBe(true);
-    const promptConfig = registeredPrompts.get('development-rules');
+    expect(registeredPrompts.has('development_rules')).toBe(true);
+    const promptConfig = registeredPrompts.get('development_rules');
     expect(promptConfig).toBeDefined();
     expect(promptConfig[0].description).toBe(
       'Get development rules as a system prompt for a scope and key (works with any AI editor)',
     );
   });
 
-  it('development-rules prompt handler returns formatted message', async () => {
+  it('development_rules prompt handler returns formatted message', async () => {
     getMergedRulesSpy.mockResolvedValue('# Test Rules\n\nContent here');
 
     setupPrompts(server);
 
-    const promptConfig = registeredPrompts.get('development-rules');
+    const promptConfig = registeredPrompts.get('development_rules');
     const handler = promptConfig[1]; // Handler is the second argument
 
     const result = await handler({ scope: 'project', key: 'buerokratt/Service-Module' });
@@ -68,12 +68,12 @@ describe('setupPrompts', () => {
     getMergedRulesSpy.mockRestore();
   });
 
-  it('development-rules prompt handler includes scope and key in message', async () => {
+  it('development_rules prompt handler includes scope and key in message', async () => {
     getMergedRulesSpy.mockResolvedValue('Rules content');
 
     setupPrompts(server);
 
-    const promptConfig = registeredPrompts.get('development-rules');
+    const promptConfig = registeredPrompts.get('development_rules');
     const handler = promptConfig[1];
 
     const result = await handler({ scope: 'group', key: 'global' });
